@@ -9,6 +9,13 @@ updated: 2026-07-28
 nav_order: 8
 permalink: /changelog/
 ---
+### 28 July 2026 - Version 38
+- Fixed the `/script` command not registering on Paper servers.
+- The `/script info <path>` command now shows more profiling information.
+- Fixed a compiler bug related to callsite generation in ES6 classes.
+- Revised dependency resolution stratigy in cases where one or more child scripts failed to load, but got resurected later.
+- Implemented a ton of missing standard libraries for Strings and Arrays.
+
 ### 27 July 2026 - Version 37
 - Overhauled the TypeScript toolchain: the old bundled compiler is gone, `tscjni` is now pulled from the repo instead.
 - Fixed `@/` imports not resolving in every case.
