@@ -1,0 +1,55 @@
+title: PixelScript
+description: Documentation for PixelScript, a hot-reloadable JavaScript and TypeScript runtime for Minecraft servers.
+url: https://pixelib.github.io
+baseurl: /pixelscript-docs
+
+theme: just-the-docs
+
+# just-the-docs renders through its "default" layout; apply it to every page
+# so individual articles do not each have to declare it.
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-relative-links
+  - jekyll-sitemap
+
+# Rewrites relative .md links to their permalinks, so the same link works
+# both on github.com and on the published site.
+relative_links:
+  enabled: true
+  collections: false
+
+# just-the-docs
+color_scheme: dark
+search_enabled: true
+search:
+  heading_level: 3
+  previews: 2
+heading_anchors: true
+
+aux_links:
+  GitHub: https://github.com/pixelib/pixelscript
+  Downloads: https://license-platform.pixelib.dev/artifacts
+aux_links_new_tab: true
+
+back_to_top: true
+back_to_top_text: Back to top
+
+footer_content: >-
+  PixelScript is a Pixelib project.
+  Found a mistake in these docs?
+  <a href="https://github.com/pixelib/pixelscript-docs/issues">Open an issue</a>.
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.md
+  - LICENSE
+  - .github
