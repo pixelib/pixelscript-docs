@@ -9,6 +9,10 @@ updated: 2026-07-28
 nav_order: 8
 permalink: /changelog/
 ---
+### 31 July 2026 - Version 39
+- Migrated TS pre-processor to the new architecture
+- Added support for `musl` (alpine linux), alongside glibc, which allows PixelScript to run on more platforms. (needed because `itzg/minecraft-server` is now alpine-based)
+
 ### 28 July 2026 - Version 38
 - Fixed the `/script` command not registering on Paper servers.
 - The `/script info <path>` command now shows more profiling information.
