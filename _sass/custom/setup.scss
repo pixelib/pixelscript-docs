@@ -1,0 +1,19 @@
+// The PixelScript palette, read straight off the brand marks in
+// assets/branding/ (see the table in assets/branding/README.md).
+//
+// just-the-docs imports this before any colour scheme and before the modules,
+// so both _sass/color_schemes/pixelscript.scss and _sass/custom/custom.scss can
+// use these. It is also compiled into the theme's own light/dark stylesheets,
+// which is why the palette lives here rather than inside the scheme file.
+
+$ps-green-light: #7cf089;
+$ps-green: #56d964;
+$ps-green-mid: #2e9f4a;
+$ps-green-deep: #1c7038;
+$ps-off-white: #eafbee;
+$ps-amber: #ffb020;
+$ps-brown: #8c5a1e;
+
+// Page background; also the backdrop baked into the raster icons and the
+// `theme-color` in _includes/head_custom.html.
+$ps-background: #12181e;

@@ -13,6 +13,8 @@ defaults:
       type: pages
     values:
       layout: default
+      # Social preview card, unless a page overrides it with its own `image`.
+      image: /assets/branding/social-card.png
 
 plugins:
   - jekyll-seo-tag
@@ -25,8 +27,15 @@ relative_links:
   enabled: true
   collections: false
 
+# Brand assets live in assets/branding/, copied from pixelib/pixelscript's
+# branding/ directory. `logo` feeds jekyll-seo-tag's structured data; the
+# sidebar lockup is rendered by _includes/title.html.
+logo: /assets/branding/pixelscript-mark.svg
+
 # just-the-docs
-color_scheme: dark
+# `pixelscript` is the stock dark scheme re-tinted with the brand palette,
+# defined in _sass/color_schemes/pixelscript.scss.
+color_scheme: pixelscript
 search_enabled: true
 search:
   heading_level: 3

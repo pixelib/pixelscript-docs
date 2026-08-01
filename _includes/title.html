@@ -1,0 +1,18 @@
+{%- comment -%}
+  Overrides just-the-docs' title include so the sidebar shows the PixelScript
+  lockup instead of a plain text title. The mark carries its own colours, so it
+  is safe to reference as an <img>; the wordmark is set in the site font with
+  the brand amber on "Script".
+
+  Brand assets live in assets/branding/ and are copies of pixelib/pixelscript's
+  branding/ directory. Edit them there, then re-copy.
+{%- endcomment -%}
+<span class="site-title-lockup">
+  <img
+    class="site-title-mark"
+    src="{{ '/assets/branding/pixelscript-mark.svg' | relative_url }}"
+    alt=""
+    width="32"
+    height="32">
+  <span class="site-title-text">Pixel<span class="site-title-accent">Script</span></span>
+</span>

@@ -1,0 +1,27 @@
+// PixelScript colour scheme: just-the-docs' dark scheme, re-tinted with the
+// brand palette. The palette itself is in _sass/custom/setup.scss, which the
+// theme imports before this file.
+//
+// Selected with `color_scheme: pixelscript` in _config.yml.
+
+@import "./color_schemes/dark";
+
+// Surfaces. Slightly cooler and darker than the stock dark scheme so the
+// greens in the mark keep their bite.
+$body-background-color: $ps-background;
+$sidebar-color: #0e1318;
+$border-color: #232c33;
+$table-background-color: #182028;
+$search-background-color: #182028;
+$base-button-color: #182028;
+$feedback-color: #182028;
+
+// Text.
+$body-heading-color: $ps-off-white;
+$body-text-color: #c6d0c9;
+$search-result-preview-color: #9aa8a0;
+$link-color: $ps-green-light;
+$btn-primary-color: $ps-green-mid;
+$nav-child-link-color: #b3bfb7;
+
+// The github-dark code block colours are inherited from the dark scheme.

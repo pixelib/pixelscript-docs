@@ -1,0 +1,53 @@
+// PixelScript branding on top of just-the-docs.
+// Colour variables come from _sass/color_schemes/pixelscript.scss.
+
+// Sidebar / mobile-header lockup, rendered by _includes/title.html.
+.site-title-lockup {
+  display: flex;
+  align-items: center;
+  gap: $sp-2;
+  min-width: 0;
+}
+
+.site-title-mark {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.site-title-text {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.site-title-accent {
+  color: $ps-amber;
+}
+
+// The brand block is the one bit of colour in the header, so let the divider
+// under it pick up the green rather than the neutral border.
+.site-header {
+  border-bottom-color: rgba($ps-green-mid, 0.35);
+}
+
+// Home page hero: the full lockup, including the tagline, standing in for the
+// page's h1 (its alt text is the accessible heading).
+.hero-logo {
+  display: block;
+  width: 100%;
+  max-width: 38rem;
+  height: auto;
+  margin: 0 0 $sp-2;
+}
+
+// Screenshots read as floating rectangles on a dark page without a frame.
+.site-screenshot {
+  border: $border $border-color;
+  border-radius: $border-radius;
+}
+
+// Anchor the current page in the nav with the brand green.
+.nav-list .nav-list-item .nav-list-link.active {
+  box-shadow: inset 3px 0 0 0 $ps-green;
+}

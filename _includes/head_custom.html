@@ -1,0 +1,8 @@
+{%- comment -%}
+  Branding in <head>: an SVG favicon for browsers that support it (favicon.ico
+  in the site root is the fallback, picked up by the theme's favicon include),
+  the touch icon, and the address-bar colour matching the site background.
+{%- endcomment -%}
+<link rel="icon" href="{{ '/assets/branding/pixelscript-mark.svg' | relative_url }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ '/assets/branding/apple-touch-icon.png' | relative_url }}">
+<meta name="theme-color" content="#12181e">

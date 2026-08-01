@@ -3,12 +3,12 @@ title: Home
 nav_order: 1
 permalink: /
 ---
-# PixelScript
+# ![PixelScript](./assets/branding/pixelscript-logo-on-dark.svg){: .hero-logo }
 
 {: .fs-6 .fw-300 }
 A hot-reloadable JavaScript and TypeScript runtime for Minecraft servers.
 
-![PixelScript](./assets/img/thumb.png)
+![PixelScript running in an IDE next to a Minecraft server](./assets/img/thumb.png){: .site-screenshot }
 
 PixelScript runs your server logic as JavaScript on the JVM, calling the real Bukkit/Paper API. Save a
 file and the change is live. No rebuild, no restart, no reconnect.

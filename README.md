@@ -1,5 +1,12 @@
 <p align="center">
-  <img src="assets/img/thumb.png" alt="PixelScript" width="820">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/branding/pixelscript-logo-on-dark.svg">
+    <img src="assets/branding/pixelscript-logo.svg" alt="PixelScript" width="440">
+  </picture>
+</p>
+
+<p align="center">
+  <img src="assets/img/thumb.png" alt="PixelScript running in an IDE next to a Minecraft server" width="820">
 </p>
 
 <h1 align="center">PixelScript documentation</h1>
