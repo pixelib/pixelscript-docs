@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://pixelib.github.io/pixelscript-docs/ai/">Onboard your AI</a> &middot;
-  <a href="https://github.com/pixelib/pixelscript">PixelScript on GitHub</a> &middot;
+  <a href="https://pixelib.dev/projects/pixelscript">About the project</a> &middot;
   <a href="https://license-platform.pixelib.dev/artifacts">Downloads</a>
 </p>
 
