@@ -134,5 +134,4 @@ Pushing to `main` deploys automatically via [the Pages workflow](.github/workflo
 
 ## License
 
-The documentation in this repository is public. PixelScript itself is commercial software;
-see [the main repository](https://github.com/pixelib/pixelscript).
+The documentation in this repository is public. PixelScript itself is commercial software.
