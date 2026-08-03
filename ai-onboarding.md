@@ -86,8 +86,8 @@ your own codebase. Things that pay off immediately:
 ## This project
 
 - Server types: `lobby`, `survival`, `minigames`, selected by `$SERVER_TYPE`
-- Entrypoint: `init.ts`, which watches `global/init-global.js` plus one server module
-- Messages go through `@/global/utils/messages.js`, never raw `sendMessage`
+- Entrypoint: `init.ts`, which watches `global/index.js` plus one server module
+- Messages go through `@/lib/chat/messages`, never raw `sendMessage`
 - Permissions are namespaced `mynetwork.<feature>.<action>`
 - We target Paper 1.21 and use Adventure/MiniMessage, never legacy colour codes
 ```
@@ -101,7 +101,7 @@ the setup landed.
 If you want to check that everything is wired up, this is a reasonable first request:
 
 > Read CLAUDE.md and the existing scripts. Then add a `/warp` command as a watched feature under
-> `global/feature/warps/`, backed by a `DataFile` at `scripts/resources/warps.yml`. Follow the existing
+> `global/features/warps/`, backed by a `DataFile` at `scripts/resources/warps.yml`. Follow the existing
 > conventions for permissions and messages.
 
 A correctly onboarded agent will register the feature from a watcher rather than an import, load the

@@ -1,7 +1,7 @@
 # PixelScript
 
 A hot-reloadable JavaScript/TypeScript runtime for Minecraft servers, running on Texel (a JVM JS engine
-forked from Nashorn). Scripts call the real Bukkit/Paper API directly and are reloaded on save without
+based on Nashorn, but turbo charged to support modern JavaScript). Scripts call the real Bukkit/Paper API directly and are reloaded on save without
 restarting the server.
 
 This file is a condensed reference for writing PixelScript scripts. It is the distilled version of the
@@ -10,8 +10,8 @@ full documentation, which is:
 - in `.pixelscript-docs/` if this project was set up with the one-command installer, **read it when you need detail**
 - otherwise at <https://pixelib.github.io/pixelscript-docs/>
 
-**Before writing anything**, read `PixelScript/scripts/` if this server still has the example project the
-plugin ships on first boot. It is a complete, working codebase and the fastest way to absorb the idioms.
+**Before writing anything**, read the scripts already in this project and follow their conventions. If the
+folder is empty, the plugin ships a working example project on first boot — load it and read that instead.
 
 Everything below describes the runtime, not this specific project. Project-specific conventions belong in a
 "This project" section at the bottom of this file.
@@ -107,25 +107,26 @@ Mixing these is what produces surprise reload cascades.
    script finishes evaluating. Calls from inside a listener/callback/command are silently ignored.
 
 ```javascript
-// scripts/global/init-global.js
+// scripts/global/index.js
 Watcher.watch([
-  'feature/chatformat/chatformat.js',   // → scripts/global/feature/chatformat/chatformat.js
-  'feature/punishments/init.js',
+  'features/chat/chat.js',              // → scripts/global/features/chat/chat.js
+  'features/punishments/index.js',
+  'patches/commands/fly.js',
 ]);
 ```
 
 ### Canonical entrypoint
 
 ```javascript
-// scripts/init.js  (root)
+// scripts/init.ts  (root)
 const System = Script.loadClass('java.lang.System');
 const serverType = System.getenv('SERVER_TYPE') || 'lobby';
 
-Watcher.watch('global/init-global.js');   // common to all server types
+Watcher.watch('global/index.js');   // common to all server types
 
 switch (serverType) {
-  case 'lobby': Watcher.watch('servers/lobby/init-lobby.js'); break;
-  case 'game':  Watcher.watch('servers/game/init-game.js');  break;
+  case 'lobby': Watcher.watch('servers/lobby/index.js'); break;
+  case 'game':  Watcher.watch('servers/game/index.js');  break;
   default:
     console.warn(`Unknown SERVER_TYPE "${serverType}".`);
     Bukkit.shutdown();
@@ -133,23 +134,54 @@ switch (serverType) {
 }
 ```
 
-Each `init-*.js` is nothing but a list of watches. That gives a tree of barriers where a change deep in one
+Every `index.js` is nothing but a list of watches. That gives a tree of barriers where a change deep in one
 feature never disturbs the rest.
 
 ### Layout
 
+PixelScript does not care how you arrange files — only which role each one has. **Follow whatever layout
+this project already uses.** If you are starting one from scratch, the shape below is what the larger
+production networks on PixelScript converged on, and it scales without the tree turning into a maze.
+
 ```text
 scripts/
-├── init.ts                      # root, branches on server type
-├── config/constants.js          # exported constants
-├── global/
-│   ├── init-global.js           # watches everything below
-│   ├── feature/<name>/          # watched features
-│   └── utils/                   # imported modules
-└── servers/<type>/
-    ├── init-<type>.js
-    └── feature/<name>/
+├── init.ts                  # root, branches on server type. the only auto-loaded file
+├── lib/                     # imported. grouped by subject like a package tree
+│   ├── chat/                #   messages.js, format.js
+│   ├── command/             #   guards.js, completion.js
+│   ├── database/            #   db.js
+│   ├── gui/                 #   gui.js, paginated.js
+│   └── item/                #   items.js, registry.js
+├── global/                  # watched. loads on every server type
+│   ├── index.js
+│   ├── features/<name>/     #   things a player would name
+│   └── patches/             #   grouped by what they touch
+│       ├── commands/
+│       └── world/
+├── servers/<type>/          # watched. same shape, only this server type
+│   ├── index.js
+│   ├── features/<name>/
+│   └── patches/
+└── resources/               # yml read by DataFile
 ```
+
+Two axes. **Scope** on the outside (`global/` vs `servers/<type>/`), **kind** on the inside
+(`features/` vs `patches/`), the same in every scope. `lib/` sits outside both because it is imported
+rather than watched.
+
+- **`features/`** are things a player would name: homes, the economy, chat, the scoreboard. One folder
+  each, an `index.js` listing its parts, one file per command, plus a `store.js` if it owns data.
+- **`patches/`** are things that only make sense as a diff against vanilla or another feature: a
+  `/gamemode` command, forced gamerules, overriding `/help`. No state of their own.
+- **`lib/`** is everything imported. Nothing in it knows about a specific feature.
+
+Two conventions worth keeping:
+
+- **`index.js` is always a bare `Watcher.watch([...])` and nothing else.** Safe to reserve, because
+  imports never resolve to a directory — there is no `index.js` lookup, so nothing can pull one in as
+  a module by accident.
+- **A file is either watched or imported, never both.** The engine only warns; mixing the two is the
+  usual cause of a reload cascade nobody asked for.
 
 ---
 
@@ -166,6 +198,11 @@ Named exports only. **No default exports.** No `import * as ns`. No `import { a 
 
 - **`.js`/`.ts` extension is optional**. The resolver tries `.js`, then `.ts`.
 - **Always write `@/` with the slash.** Bare `@utils/x` does not resolve correctly.
+- **There is no directory/index resolution.** `@/features/homes` resolves to the directory and fails;
+  it will never pick up `homes/index.js`. Import the file you mean.
+- **`get` and `set` cannot be import binding names.** `import { get } from './store'` is a parse error
+  (`Expected ident but found }`), in any position in the list. Exporting them is fine — it is the
+  import binding list that trips. Name them `getWarp`, `setBalance` and so on.
 - `tsconfig.json` maps `@/*` to the scripts root, so the IDE agrees with the runtime.
 - Circular imports are detected and rejected at load with a readable trace.
 
@@ -312,6 +349,22 @@ const listener = new MyAdapter(__plugin, ListenerPriority.MONITOR, [PacketType.P
 ```
 
 **`super` reaches parent methods and constructors, not parent fields.**
+
+**A `#private` field shadows that property name for the whole class body**, including calls on other
+objects. A class with a `#lore` field cannot call `meta.lore(lines)` anywhere inside itself — the call
+resolves to the private field and throws `meta[Symbol(...)] is not a function`. Name private fields so
+they cannot collide with any Java method you call in that class:
+
+```javascript
+class ItemBuilder {
+  #loreLines = [];              // NOT #lore, which would break meta.lore(...) below
+
+  build() {
+    const meta = new $.ItemStack(this.#material).getItemMeta();
+    meta.lore(toComponentList(this.#loreLines));
+  }
+}
+```
 
 ---
 
@@ -473,9 +526,15 @@ holder.setInventory(inv);
 holder.setAttachment('__internalClickHandler', (player, slot, clickType, event) => { /* ... */ });
 ```
 
-A single listener script then checks `inventory.getHolder() instanceof AttachmentHolder`, cancels the
-event, and dispatches to the attachment. Working implementation:
-`PixelScript/Plugins/pixelscript-paper/src/main/resources/scripts/global/utils/guilib/`.
+One imported module then owns a single `InventoryClickEvent` listener, checks
+`inventory.getHolder() instanceof AttachmentHolder`, cancels the event, and dispatches to the
+attachment. Put the dispatcher in the module itself rather than in a separate watched script: it has
+to exist exactly once, and an imported module is the only load role that guarantees that.
+
+Two things that bite when you write one: slot arithmetic in JS produces doubles, which box to
+`java.lang.Double` and never match an int key, so `Math.trunc` every slot; and cancel on
+`event.getInventory()` (the top inventory) rather than `getClickedInventory()`, or a shift-click from
+the player's own inventory pushes an item into your menu.
 
 Always close open GUIs in an unload callback, or reloading strands players in a dead inventory.
 

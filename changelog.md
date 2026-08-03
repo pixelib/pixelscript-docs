@@ -9,6 +9,12 @@ updated: 2026-07-28
 nav_order: 8
 permalink: /changelog/
 ---
+### 4 August 2026 - Version 40
+- Merged new template repository that gets used for default projects. The new example project is based on real organization and structure from ImagineFun and DroomCraft
+- Cleaned up logging
+- Fixed a rare filewatcher bug where it would watch script during initalization of the example workspace, leading to weird race conditions and errors
+- Updated claude.md instructions that reflect better practices and organization
+
 ### 31 July 2026 - Version 39
 - Migrated TS pre-processor to the new architecture
 - Added support for `musl` (alpine linux), alongside glibc, which allows PixelScript to run on more platforms. (needed because `itzg/minecraft-server` is now alpine-based)
