@@ -23,6 +23,7 @@ answer "what is actually loaded right now" without guessing.
 | `/script list` | `pixelscript.list` |
 | `/script timings <enable\|disable>` | `pixelscript.profiler.enable` / `pixelscript.profiler.disable` |
 | `/script registrydebug` | `pixelscript.debug` |
+| `/script evalin <file> <code>` | `pixelscript.debug` |
 
 ## `/script`
 
@@ -75,3 +76,24 @@ Counts scripts, root scripts, modules, isolate modules and failed scripts. Semi-
 when we are helping you diagnose a resolver issue.
 
 ![registrydebug screenshot](./assets/img/command-registrydebug.png)
+
+## `/script evalin <file> <code>`
+
+Evaluates JS in the scope of an already-loaded script, without editing the script itself. Useful for
+manual or agentic debugging: call an individual function or inspect a variable from a script without
+touching the file (and without triggering a reload).
+
+```
+/script evalin global/features/machines/api/chainable.ts log("hello from chainable!");
+```
+
+The `<file>` path is relative to the `scripts` directory, same as `/script info`, and tab completion
+suggests loaded script paths.
+
+If `<code>` is a bare variable name, its current value is returned in chat instead of `undefined`.
+Anything else is evaluated as a statement/expression and, if it returns a value, that return value is
+shown instead.
+
+```
+/script evalin global/features/machines/api/chainable.ts machineRegistry
+```

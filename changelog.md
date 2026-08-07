@@ -9,6 +9,13 @@ updated: 2026-07-28
 nav_order: 8
 permalink: /changelog/
 ---
+### 5 August 2026 - Version 41
+- Added support for `class ... extends` directly against a Java class, including abstract classes like Bukkit's `Event`. `super(...)` takes the Java constructor's arguments, and `TheClass.class` gets the raw generated `Class` for registration APIs. `Java.extend` still works but is now considered legacy in favor of this.
+- Improved `.d.ts` generation, fixing a lot of common gripes. Complicated lines like `world.getEntitiesByClass(ItemEntity.class).forEach((entity: org.bukkit.entity.Item) => {` now correctly resolve all types, even when it involves generics, and the generated types are now more readable.
+- Errors from `.ts` files now show the correct line numbers and context source through sourcemaps that are drilled down to deltas during compilation time (little to no runtime overhead).
+- Added the `evalin` command, which lets you eval code in the context of a script. Useful for manual/agentic debugging, because it lets you call indidividual functions and inspect variables in a script without having to modify the script itself. Example: `/script evalin global/features/machines/api/chainable.ts log("hello from chainable!");`
+- Fixed a small bug where the `.d.ts` generator would sometimes be executed more than it should.
+
 ### 4 August 2026 - Version 40
 - Merged new template repository that gets used for default projects. The new example project is based on real organization and structure from ImagineFun and DroomCraft
 - Cleaned up logging

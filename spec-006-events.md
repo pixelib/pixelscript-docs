@@ -5,7 +5,7 @@ title: Event listeners
 description: Respond to Bukkit events with registerListener, including priorities and automatic cleanup.
 status: stable
 tags: [api, events, listener]
-updated: 2026-07-28
+updated: 2026-08-08
 parent: API reference
 nav_order: 6
 permalink: /api-event-listener/
@@ -92,6 +92,29 @@ registerListener($.BlockBreakEvent, (event) => {
 ```
 
 Only cancellable events have `setCancelled`. Calling it on one that is not will throw.
+
+## Your own custom events
+
+Custom events, ones your own scripts define rather than ones Bukkit or another plugin fires, are written
+with native `class ... extends`, subclassing a Java event class directly. See
+[Interfaces and abstract classes](./tips-002-interfaces-and-abstract-classes.md) for the full pattern
+(`HandlerList`, `super(...)`, private fields).
+
+Once defined, wiring one up is the same two calls as any other event: `registerListener` to listen,
+`Bukkit.getPluginManager().callEvent(event)` to fire. `registerListener` takes the class's raw `Class`
+object (`CustomPlayerEvent.class`), not the JS class itself:
+
+```javascript
+registerListener(CustomPlayerEvent.class, (event) => {
+  log(`${event.getPlayer().getName()} triggered CustomPlayerEvent`);
+});
+
+const event = new CustomPlayerEvent(player, 10);
+Bukkit.getPluginManager().callEvent(event);
+```
+
+Firing is plain Bukkit. `callEvent` is not a PixelScript wrapper, so it runs listeners synchronously on
+whatever thread calls it, same as firing any other event.
 
 ## Threading
 

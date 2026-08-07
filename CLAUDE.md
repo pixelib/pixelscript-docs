@@ -69,7 +69,7 @@ All return an `int` task id. Bukkit-style aliases exist (`runTask`, `runTaskTime
 | `newLocation(world, x, y, z, pitch?, yaw?)` | Note: pitch before yaw |
 | `asInt/asLong/asFloat/asDouble/asShort/asByte` | Disambiguate Java numeric overloads |
 | `ArrayList`, `HashMap`, `HashSet`, `UUID`, `Gson`, `Arrays`, `List` | Preloaded Java classes |
-| `Java.extend(AbstractClass, overrides)` | Subclass a Java abstract class |
+| `Java.extend(AbstractClass, overrides)` | Subclass a Java abstract class (legacy, prefer native `class extends`) |
 | `Java.synchronized(fn, lockObject)` | Java `synchronized` semantics |
 | `JSON`, `Map`, `Set`, `Math`, `Date` | Standard JS |
 
@@ -339,7 +339,35 @@ constructor:
 const impl = new SomeInterface({ methodA() {}, methodB(x) { return x; } });
 ```
 
-**Abstract classes need `Java.extend`:**
+**Java classes can be subclassed with plain `class ... extends`**, including abstract ones like Bukkit's
+`Event`. This is the preferred way to subclass now. `super(...)` takes the Java constructor's arguments,
+and `TheClass.class` gets you the raw `Class` object a listener registration or reflective API wants:
+
+```javascript
+const PlayerEvent = Script.loadClass('org.bukkit.event.player.PlayerEvent');
+const HandlerList = Script.loadClass('org.bukkit.event.HandlerList');
+
+class CustomPlayerEvent extends PlayerEvent {
+  static handlerList = new HandlerList();
+
+  constructor(player) {
+    super(player);
+  }
+
+  getHandlers() {
+    return CustomPlayerEvent.handlerList;
+  }
+
+  static getHandlerList() {
+    return CustomPlayerEvent.handlerList;
+  }
+}
+
+registerListener(CustomPlayerEvent.class, (event) => { /* ... */ });
+Bukkit.getPluginManager().callEvent(new CustomPlayerEvent(player));
+```
+
+**`Java.extend` still works but is legacy**, prefer native `class extends` for new code:
 
 ```javascript
 const MyAdapter = Java.extend(PacketAdapter, {
@@ -565,6 +593,7 @@ autocomplete after the next reload.
 | `/script info <path>` | Parents, extensions, load time, profiler data (avg/min/max) |
 | `/script list` | Every loaded script path |
 | `/script timings <enable\|disable>` | Profiler collection, on by default |
+| `/script evalin <path> <code>` | Eval code in a loaded script's own scope — call a function or inspect state without editing the file. Bare variable name returns its value; anything else returns the statement's return value |
 
 `Script.measure('name', fn)` adds your own entry to `/script info`.
 

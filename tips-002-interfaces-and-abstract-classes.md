@@ -5,7 +5,7 @@ title: Interfaces and abstract classes
 description: Implementing Java interfaces and extending abstract classes from JavaScript.
 status: stable
 tags: [jvm, interop, java]
-updated: 2026-07-28
+updated: 2026-08-08
 parent: Tips & tricks
 nav_order: 2
 permalink: /interfaces-and-abs-classes/
@@ -88,10 +88,64 @@ const myRenderer = new ChatRenderer({
 registerListener(AsyncChatEvent, (event) => event.renderer(myRenderer));
 ```
 
-## Abstract classes: `Java.extend`
+## Subclassing: native `class extends`
 
-Abstract classes need `Java.extend(BaseClass, overrides)`, which produces a new class you then instantiate
-with the parent's constructor arguments.
+Any JS class can `extends` a Java class directly, abstract or concrete, including ones whose constructor
+takes arguments. This is the current, preferred way to subclass; the runtime generates a real Java adapter
+class behind the scenes. Call `super(...)` with whatever the Java constructor expects, same as extending a
+JS class.
+
+A worked example: a custom Bukkit event, subclassing `PlayerEvent`.
+
+```javascript
+const PlayerEvent = Script.loadClass('org.bukkit.event.player.PlayerEvent');
+const HandlerList = Script.loadClass('org.bukkit.event.HandlerList');
+
+class CustomPlayerEvent extends PlayerEvent {
+  static handlerList = new HandlerList();
+  #height;
+
+  constructor(player, height) {
+    super(player);
+    this.#height = height;
+  }
+
+  getHeight() {
+    return this.#height;
+  }
+
+  getHandlers() {
+    return CustomPlayerEvent.handlerList;
+  }
+
+  static getHandlerList() {
+    return CustomPlayerEvent.handlerList;
+  }
+}
+```
+
+`CustomPlayerEvent.class` gets you the raw generated Java `Class`, the same trick used
+[everywhere else Java wants a `Class` object](./tips-001-java-interop.md). That is what a listener
+registration expects, not the JS class itself. Firing the event is plain Bukkit, not a PixelScript API:
+
+```javascript
+registerListener(CustomPlayerEvent.class, (event) => {
+  log(`CustomPlayerEvent fired for ${event.getPlayer().getName()} with height ${event.getHeight()}`);
+});
+
+const event = new CustomPlayerEvent(Bukkit.getPlayer('chemhypeboy'), 10);
+Bukkit.getPluginManager().callEvent(event);
+```
+
+This is not limited to events. Anything covered by `Java.extend` below (packet adapters, custom GUI
+holders, any abstract class a third-party API wants a subclass of) can be written this way instead, and it
+is the preferred style for new code.
+
+## Legacy: `Java.extend`
+
+`Java.extend(BaseClass, overrides)` predates native `class extends` support and does the same job: it
+produces a new class you then instantiate with the parent's constructor arguments. It still works and
+nothing needs to migrate, but reach for native `class extends` above in new code instead.
 
 Here is the canonical case, a ProtocolLib packet adapter:
 
