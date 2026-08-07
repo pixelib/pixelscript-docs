@@ -55,6 +55,7 @@ All return an `int` task id. Bukkit-style aliases exist (`runTask`, `runTaskTime
 | Global | Notes |
 |--------|-------|
 | `Sql` | `isAvailable()`, `makeQuery(q, prep, handler)`, `makeUpdate(q, prep, handler)`, `transaction(ctx => ...)`, `createTableIfNotExists(...)`, `addColumnIfNotExists(...)`. **All blocking** |
+| `Redis` | `isAvailable()`, `get/set/setEx/exists/delete(key)`, `hget/hset/hgetAll(mapKey, ...)`, `increment/decrement(key)`, `publish(channel, msg)`, `subscribe(channel, (ch, msg) => ...)`, `unsubscribe(channel, id)`. Optional, disabled by default, cross-server |
 | `DataFile` | `new DataFile('scripts/resources/x.yml')`, path relative to `plugins/PixelScript` |
 | `StaticStorage` | `set(k,v)`, `get(k)`, `getOrFillDefault(k, default)`. Survives reloads |
 | `GlobalMap` | `GlobalMap.getInstance(name)` → `put`/`set`/`get`/`remove`. Survives reloads |
@@ -631,6 +632,7 @@ When this file is not enough, the full articles are in `.pixelscript-docs/` (or 
 | Scheduler, with worked patterns | `spec-007-scheduler.md` |
 | Sql queries and transactions | `spec-009-database.md` |
 | Exposing JS to Java plugins | `spec-014-java-implementations.md` |
+| Redis: cross-server storage and pub/sub | `spec-015-redis.md` |
 | Interop gotchas | `tips-001-java-interop.md` |
 
 ---

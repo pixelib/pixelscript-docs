@@ -36,6 +36,7 @@ Everything the runtime binds into your scripts. All of it is available as a glob
 | [JSON](./spec-012-json.md) | Parsing and serializing |
 | [Shared state and messaging](./spec-013-shared-state.md) | `StaticStorage`, `GlobalMap`, `GlobalNotification`, `DataFile` |
 | [Implementing Java interfaces](./spec-014-java-implementations.md) | Handing a JavaScript implementation back to a Java plugin |
+| [Redis](./spec-015-redis.md) | The `Redis` module, cross-server key/value, hashes, counters and pub/sub |
 
 ## The two you should read first
 

@@ -58,6 +58,5 @@ API is the actual toolbox.
 
 PixelScript is under active development. Currently in flight:
 
-- Native Redis support, shaped like the `Sql` module
 - More documentation: error components, debugging guides, more worked examples
 - Broader TypeScript tooling

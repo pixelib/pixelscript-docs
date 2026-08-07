@@ -2,17 +2,17 @@
 project: pixelscript
 slug: configuration
 title: Configuration
-description: The three PixelScript configuration files and what each of them controls.
+description: The four PixelScript configuration files and what each of them controls.
 status: stable
 tags: [intro, runtime, minecraft, config]
-updated: 2026-07-28
+updated: 2026-08-08
 parent: Tutorial
 nav_order: 2
 permalink: /configuration/
 ---
 # Configuration
 
-PixelScript has three configuration files, all in `plugins/PixelScript`. None of them are required reading
+PixelScript has four configuration files, all in `plugins/PixelScript`. None of them are required reading
 to get started, but each one solves a specific problem you will eventually hit.
 
 | File | Controls |
@@ -20,6 +20,7 @@ to get started, but each one solves a specific problem you will eventually hit.
 | `config.yml` | Which plugins must load before scripts start |
 | `class-searchcontext.yml` | Which packages the [`$` resolver](./spec-002-magic-imports.md) searches |
 | `database.yml` | The [Sql module](./spec-009-database.md) connection |
+| `redis.yml` | The [Redis module](./spec-015-redis.md) connection |
 
 ## config.yml: startup order
 
@@ -99,6 +100,39 @@ connection_pool:
 
 Scripts reach this through the `Sql` global. See [the database API](./spec-009-database.md) for queries,
 updates, and transactions.
+
+## redis.yml: the Redis module
+
+An optional module for cross-server key/value storage, hashes, atomic counters and pub/sub, backed by
+Redisson. Disabled by default, since not every server needs one.
+
+```yaml
+# Set to true to enable the Redis module
+enabled: false
+
+# Redisson requires the redis:// prefix
+address: redis://127.0.0.1:6379
+password: ""
+
+# Standard Operations (Get/Set)
+connection_pool:
+  minimum_idle: 8
+  maximum_size: 32
+
+# Pub/Sub Operations (Chat/Events)
+subscription_pool:
+  minimum_idle: 4
+  maximum_size: 16
+
+# Keep-alives and timeouts
+network:
+  # How often (ms) to ping the server to keep connections alive through quiet periods
+  ping_interval: 30000
+  # Connection timeout (ms), a safe fail-fast timeframe for Minecraft servers
+  timeout: 3000
+```
+
+Scripts reach this through the `Redis` global. See [the Redis API](./spec-015-redis.md).
 
 ## Per-feature configuration
 

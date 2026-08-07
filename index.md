@@ -84,7 +84,7 @@ are unregistered and re-registered for you.
 one feature does not reboot your whole server's logic. Imported modules are shared singletons that cascade
 to their importers. You decide where the boundaries are.
 
-**The full Bukkit API, plus shortcuts.** `Bukkit`, `Scheduler`, `Sql`, `DataFile`, `registerCommand`,
+**The full Bukkit API, plus shortcuts.** `Bukkit`, `Scheduler`, `Sql`, `Redis`, `DataFile`, `registerCommand`,
 `registerListener`, `fetch` and friends are globals. Everything else is one `Script.loadClass` away, and any
 Java library can be pulled in at runtime from a jar or from Maven.
 
